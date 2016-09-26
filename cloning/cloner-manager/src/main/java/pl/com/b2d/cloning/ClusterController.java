@@ -1,19 +1,22 @@
 package pl.com.b2d.cloning;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import pl.com.b2d.cloning.xxx.Cluster;
 import pl.com.b2d.cloning.xxx.Configuration;
 import pl.com.b2d.cloning.xxx.Host;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 /**
  * Created by Łukasz Kucharski on 2016-09-24.
@@ -45,6 +48,18 @@ public class ClusterController {
         Stream<Cluster> clusterStream = configuration.getClusters().stream().filter(cluster -> cluster.getName().equals(clusterName));
         Cluster cluster = clusterStream.findAny().get();
         return cluster.getHosts();
+    }
+
+    @PostMapping("{clusterName}/hosts")
+    public ResponseEntity<Void> addHostToCluster(@RequestBody Host host) throws IOException {
+        final Host saved = new Host("newFullName.domain.com", "monitor2", Sets.newHashSet());
+
+        final URI location = MvcUriComponentsBuilder.
+                fromMethodCall(
+                        on(HostController.class).host(saved.getFullName())
+                ).build().toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
 }
