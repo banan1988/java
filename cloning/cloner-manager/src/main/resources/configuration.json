@@ -1,0 +1,44 @@
+{
+  "clusters" : [ {
+    "alwaysRunning" : true,
+    "hosts" : [ {
+      "applications" : [ {
+        "allowUrlPaths" : [ ],
+        "contextPath" : "/application",
+        "disallowUrlPaths" : [ ],
+        "listenPort" : 8080,
+        "rewriteUrlPaths" : [ ],
+        "trafficRate" : 1.0
+      } ],
+      "fullName" : "name.domain.com",
+      "monitorName" : "name1"
+    } ],
+    "name" : "clusterName1",
+    "updaterEnabled" : true
+  }, {
+    "alwaysRunning" : true,
+    "hosts" : [ {
+      "applications" : [ {
+        "allowUrlPaths" : [ ],
+        "contextPath" : "/application",
+        "disallowUrlPaths" : [ ],
+        "listenPort" : 8080,
+        "rewriteUrlPaths" : [ ],
+        "trafficRate" : 1.0
+      } ],
+      "fullName" : "name.domain.com",
+      "monitorName" : "name1"
+    } ],
+    "name" : "clusterName2",
+    "updaterEnabled" : true
+  } ],
+  "monitors" : [ {
+    "format" : "csv",
+    "name" : "name1",
+    "url" : "http://name1.domain"
+  }, {
+    "format" : "csv",
+    "name" : "name2",
+    "url" : "http://name2.domain"
+  } ]
+}
