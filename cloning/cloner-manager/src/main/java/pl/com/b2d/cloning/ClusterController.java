@@ -3,43 +3,56 @@ package pl.com.b2d.cloning;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import pl.com.b2d.cloning.service.ClusterService;
 import pl.com.b2d.cloning.xxx.Cluster;
 import pl.com.b2d.cloning.xxx.Configuration;
 import pl.com.b2d.cloning.xxx.Host;
+import pl.com.b2d.cloning.xxx.resource.ClusterAssembler;
+import pl.com.b2d.cloning.xxx.resource.ClusterResource;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 /**
  * Created by Łukasz Kucharski on 2016-09-24.
  */
 @RestController
+@ExposesResourceFor(ClusterResource.class)
 @RequestMapping("/clusters")
 public class ClusterController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final File fileConfiguration = new File(Resources.getResource("configuration.json").getFile());
 
-    @GetMapping
-    public Set<Cluster> clusters() throws IOException {
-        final Configuration configuration = objectMapper.readValue(fileConfiguration, Configuration.class);
-        return configuration.getClusters();
+    private final ClusterService clusterService;
+    private final ClusterAssembler clusterAssembler;
+
+    @Autowired
+    public ClusterController(final ClusterService clusterService, final ClusterAssembler clusterAssembler) {
+        this.clusterService = clusterService;
+        this.clusterAssembler = clusterAssembler;
     }
 
-    @GetMapping("{name}")
-    public Cluster cluster(@PathVariable("name") final String name) throws IOException {
-        final Configuration configuration = objectMapper.readValue(fileConfiguration, Configuration.class);
-        Stream<Cluster> clusterStream = configuration.getClusters().stream().filter(cluster -> cluster.getName().equals(name));
-        Cluster cluster = clusterStream.findAny().get();
-        return cluster;
+    @RequestMapping(method = GET)
+    public List<ClusterResource> getClusterResources() {
+        return clusterAssembler.toResources(clusterService.getClusters());
+    }
+
+    @RequestMapping(method = GET, path = "{name}")
+    public ClusterResource getClusterResource(@PathVariable("name") final String name) {
+        return clusterAssembler.toResource(clusterService.getCluster(name));
     }
 
     @GetMapping("{clusterName}/hosts")
