@@ -1,6 +1,7 @@
 package pl.com.b2d.cloning.host;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.com.b2d.cloning.configuration.Cluster;
@@ -11,6 +12,7 @@ import pl.com.b2d.cloning.configuration.Host;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by Łukasz Kucharski on 2016-10-01.
@@ -31,11 +33,11 @@ public class HostRepository {
             return Collections.emptyList();
         }
 
-        final List<Host> hosts = Lists.newArrayList();
+        final Set<Host> hosts = Sets.newHashSet();
         for (final Cluster cluster : clusters) {
             hosts.addAll(cluster.getHosts());
         }
-        return hosts;
+        return Lists.newArrayList(hosts);
     }
 
     public Optional<Host> findOne(final String fullName) {

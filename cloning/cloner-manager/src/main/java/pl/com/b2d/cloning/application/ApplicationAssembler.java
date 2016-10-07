@@ -17,7 +17,7 @@ public class ApplicationAssembler extends ResourceAssemblerSupport<Application, 
 
     @Override
     public ApplicationResource toResource(final Application application) {
-        return createResourceWithId(application.getContextPath(), application);
+        return createResourceWithId(application.getContextPath()+application.getListenPort(), application);
     }
 
     @Override

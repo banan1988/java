@@ -5,6 +5,11 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 import pl.com.b2d.cloning.application.ApplicationAssembler;
 import pl.com.b2d.cloning.configuration.Host;
+import pl.com.b2d.cloning.configuration.Monitor;
+import pl.com.b2d.cloning.monitor.MonitorController;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * Created by Łukasz Kucharski on 2016-10-01.
@@ -22,7 +27,9 @@ public class HostAssembler extends ResourceAssemblerSupport<Host, HostResource> 
 
     @Override
     public HostResource toResource(final Host host) {
-        return createResourceWithId(host.getFullName(), host);
+        HostResource resourceWithId = createResourceWithId(host.getFullName(), host);
+        resourceWithId.add(linkTo(methodOn(MonitorController.class).getMonitorResource(host.getMonitorName())).withRel("monitor"));
+        return resourceWithId;
     }
 
     @Override

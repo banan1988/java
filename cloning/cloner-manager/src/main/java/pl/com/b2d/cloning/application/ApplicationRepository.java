@@ -1,6 +1,7 @@
 package pl.com.b2d.cloning.application;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.com.b2d.cloning.configuration.Application;
@@ -11,6 +12,8 @@ import pl.com.b2d.cloning.configuration.Host;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Created by Łukasz Kucharski on 2016-10-01.
@@ -36,20 +39,25 @@ public class ApplicationRepository {
             hosts.addAll(cluster.getHosts());
         }
 
-        final List<Application> applications = Lists.newArrayList();
+        final Set<Application> applications = Sets.newHashSet();
         for (Host host : hosts) {
             applications.addAll(host.getApplications());
         }
-        return applications;
+        return Lists.newArrayList(applications);
     }
 
-    public Optional<Application> findOne(final String fullName) {
+    public Optional<Application> findOne(final String name) {
         final List<Application> applications = (List<Application>) findAll();
 
-        if (applications.stream().filter(h -> h.getContextPath().equals(fullName)).count() > 1) {
-            throw new RuntimeException("Found more than one record by fullName " + fullName);
+        Predicate<Application> filter = application -> {
+            final String fullName = application.getContextPath() + application.getListenPort();
+            return fullName.replaceFirst("/", "").equals(name);
+        };
+
+        if (applications.stream().filter(filter).count() > 1) {
+            throw new RuntimeException("Found more than one record by name " + name);
         }
-        return applications.stream().filter(h -> h.getContextPath().equals(fullName)).findFirst();
+        return applications.stream().filter(filter).findFirst();
     }
 
     public Application save(final Application host) {

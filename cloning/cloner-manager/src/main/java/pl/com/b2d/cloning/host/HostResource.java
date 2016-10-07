@@ -18,29 +18,22 @@ import java.util.List;
 public class HostResource extends ResourceSupport {
 
     private final String fullName;
-    private final String monitorName;
     private final List<ApplicationResource> applications;
 
     public HostResource(Host host, List<ApplicationResource> applicationResources) {
-        this(host.getFullName(), host.getMonitorName(), applicationResources);
+        this(host.getFullName(), applicationResources);
     }
 
     @JsonCreator
     public HostResource(
             @JsonProperty final String fullName,
-            @JsonProperty final String monitorName,
             @JsonProperty final List<ApplicationResource> applications) {
         this.fullName = fullName;
-        this.monitorName = monitorName;
         this.applications = applications;
     }
 
     public String getFullName() {
         return fullName;
-    }
-
-    public String getMonitorName() {
-        return monitorName;
     }
 
     public List<ApplicationResource> getApplications() {

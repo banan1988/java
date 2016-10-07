@@ -10,7 +10,7 @@
         "rewriteUrlPaths" : [ ],
         "trafficRate" : 1.0
       } ],
-      "fullName" : "name.domain.com",
+      "fullName" : "name1.domain.com",
       "monitorName" : "name1"
     } ],
     "name" : "clusterName1",
@@ -26,8 +26,8 @@
         "rewriteUrlPaths" : [ ],
         "trafficRate" : 1.0
       } ],
-      "fullName" : "name.domain.com",
-      "monitorName" : "name1"
+      "fullName" : "name2.domain.com",
+      "monitorName" : "name2"
     } ],
     "name" : "clusterName2",
     "updaterEnabled" : true
