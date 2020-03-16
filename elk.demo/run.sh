@@ -1,0 +1,1 @@
+java -jar elk.demo-0.0.1-SNAPSHOT.jar --spring.config.location=elk.properties

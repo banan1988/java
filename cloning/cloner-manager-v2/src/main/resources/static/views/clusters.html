@@ -1,0 +1,81 @@
+<div class="clustersController">
+    <h4>{{headingTitle}}</h4>
+    <p><img src="/gfx/logox.png" title="logo"></p>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th colspan="2">From</th>
+                <th>What</th>
+                <th>To</th>
+                <th>Traffic Rate</th>
+                <th>Host Status</th>
+                <th>Cloner Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="cluster in clusters">
+            <tr>
+                <th><input type="checkbox" value=""></th>
+                <th>{{cluster.name}}</th>
+                <th>
+                    <span class="label {{isEnabled(cluster.alwaysRunning)}}">Always Running</span>
+                    |
+                    <span class="label {{isEnabled(cluster.updaterEnabled)}}">Updater Enabled</span>
+                </th>
+                <th colspan="6"></th>
+            </tr>
+            <tr ng-repeat="host in cluster.hosts">
+                <td><input type="checkbox" value=""></td>
+                <td colspan="2">
+                    <a href="{{getFullHostDomain(host)}}" title="{{getFullHostDomain(host)}}">{{getFullHostDomain(host)}}</a>
+                </td>
+                <td>
+                    <ul ng-repeat="allowClonePaths in host.clonePaths.allow">
+                        <li>
+                            {{allowClonePaths}}
+                        </li>
+                    </ul>
+                    <ul ng-repeat="disallowClonePaths in host.clonePaths.disallow">
+                        <li>
+                            {{disallowClonePaths}}
+                        </li>
+                    </ul>
+                    <ul ng-repeat="rewriteClonePaths in host.clonePaths.rewrite">
+                        <li>
+                            {{rewriteClonePaths}}
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <p ng-repeat="targetHost in host.targetHosts">
+                        <a href="{{targetHost}}" title="{{targetHost}}">{{targetHost}}</a>
+                    </p>
+                </td>
+                <td class="status">
+                    <button class="btn btn-default" style="{{getTrafficRateColor(host.trafficRate)}}">{{getTrafficRate(host.trafficRate)}}</button>
+                    <button class="btn btn-default" style="{{getTrafficRateColor(0)}}">{{getTrafficRate(0)}}</button>
+                    <button class="btn btn-default" style="{{getTrafficRateColor(0.5)}}">{{getTrafficRate(0.5)}}</button>
+                    <button class="btn btn-default" style="{{getTrafficRateColor(1)}}">{{getTrafficRate(1)}}</button>
+                </td>
+                <td class="status">
+                    <button class="btn btn-success">Active</button>
+                    <button class="btn btn-primary m-progress">Refreshing</button>
+                </td>
+                <td class="status">
+                    <button class="btn btn-danger">Stopped</button>
+                    <button class="btn btn-warning">Not active</button>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success">Start</button>
+                        <button type="button" class="btn btn-danger">Stop</button>
+                        <button type="button" class="btn btn-primary">Restart</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
